@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: python-app
+  labels: 
+    app: mywebsite
+spec:
+  replicas: 2
+  selector: 
+    matchLabels:
+      app: mywebsite
+  template: 
+    metadata:
+      labels:
+        app: mywebsite
+    spec:
+      containers:
+      - name: mywebsite
+        image: mydjango-webapp:latest
+        imagePullPolicy: IfNotPresent #this will search for local images as well
+        volumeMounts: #here volumeMounts is list bcz n n.of volumes can be mounted
+          - name: db-connection
+            mountPath: /opt
+          - name: db-secret
+            mountPath: /etc/app/secrets
+            readOnly: true
+        ports:
+        - containerPort: 8000
+      volumes: #creating a volume
+        - name: db-connection #name of the 1st volume
+          configMap: #type of vol is configMap
+           name: test-cm
+        - name: db-secret #name of the 2nd volume
+          secret:
+            secretName: my-secret-encoded
+

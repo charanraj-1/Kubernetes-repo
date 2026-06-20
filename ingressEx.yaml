@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: minimal-ingress
+spec:
+  rules:
+    #host and path based ingress routing 
+  - host: "charan.web.com"
+    http:
+      paths:
+      - path: "/testpath"
+        pathType: Prefix
+        backend:
+          service:
+            name:  mypywebapp-service #name of the service which ingress need to connect
+            port:
+              number: 80
